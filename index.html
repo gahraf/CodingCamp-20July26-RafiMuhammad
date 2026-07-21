@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense & Budget Visualizer</title>
+
+    <!-- Prevent flash of wrong theme: apply saved theme before page renders -->
+    <script>
+      (function () {
+        const saved = localStorage.getItem('expense-tracker-theme');
+        if (saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+
+    <!-- Typography: Inter from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Application styles -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- ============================================================
+         APP SHELL
+         The outermost wrapper that centers and constrains the layout.
+    ============================================================ -->
+    <div class="app-shell">
+
+      <!-- ============================================================
+           HEADER
+           App title and theme toggle.
+      ============================================================ -->
+      <header class="app-header">
+        <h1 class="app-title">Expense & Budget Visualizer</h1>
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+        >
+          <span class="theme-toggle__icon" aria-hidden="true">☀️</span>
+        </button>
+      </header>
+
+      <!-- ============================================================
+           BALANCE CARD
+           Displays total spending. Updates reactively via JS.
+      ============================================================ -->
+      <section class="balance-card" aria-label="Total balance">
+        <p class="balance-card__label">Total Balance</p>
+        <p
+          class="balance-card__amount"
+          id="balance-amount"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          Rp 0
+        </p>
+        <!-- Spending limit warning — hidden by default, shown by JS when limit is exceeded -->
+        <div class="balance-card__limit-warning" id="limit-warning" hidden>
+          <span class="limit-warning__icon" aria-hidden="true">⚠️</span>
+          <span class="limit-warning__text" id="limit-warning-text"></span>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SPENDING LIMIT CONTROL
+           Lets the user set a personal spending threshold.
+      ============================================================ -->
+      <section class="limit-control" aria-label="Spending limit">
+        <label class="limit-control__label" for="spending-limit">
+          Spending Limit
+        </label>
+        <div class="limit-control__row">
+          <input
+            class="limit-control__input"
+            type="number"
+            id="spending-limit"
+            placeholder="Set a limit (e.g. 500.000)"
+            min="1"
+            step="1"
+            aria-describedby="limit-hint"
+          />
+          <button class="limit-control__btn" id="set-limit-btn">Set</button>
+          <button class="limit-control__btn limit-control__btn--clear" id="clear-limit-btn">Clear</button>
+        </div>
+        <p class="limit-control__hint" id="limit-hint">
+          Leave empty to remove the limit.
+        </p>
+      </section>
+
+      <!-- ============================================================
+           ADD TRANSACTION FORM
+           Three fields: Item Name, Amount, Category.
+           Inline validation messages are injected by JS below each field.
+      ============================================================ -->
+      <section class="form-section" aria-label="Add transaction">
+        <h2 class="section-title">Add Transaction</h2>
+        <form class="transaction-form" id="transaction-form" novalidate>
+
+          <div class="form-field">
+            <label class="form-field__label" for="item-name">Item Name</label>
+            <input
+              class="form-field__input"
+              type="text"
+              id="item-name"
+              name="itemName"
+              placeholder="e.g. Kopi, Grab, Bioskop"
+              autocomplete="off"
+              maxlength="60"
+            />
+            <p class="form-field__error" id="item-name-error" role="alert" hidden></p>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="amount">Amount</label>
+            <input
+              class="form-field__input"
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder="0"
+              min="1"
+              step="1"
+            />
+            <p class="form-field__error" id="amount-error" role="alert" hidden></p>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label" for="category">Category</label>
+            <select class="form-field__select" id="category" name="category">
+              <option value="Food & Drinks">Food &amp; Drinks</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Hobbies">Hobbies</option>
+              <option value="Bills">Bills</option>
+              <option value="Health">Health</option>
+              <option value="Education">Education</option>
+              <option value="Investments">Investments</option>
+              <option value="Savings">Savings</option>
+            </select>
+          </div>
+
+          <button class="btn-primary" type="submit">Add Transaction</button>
+
+        </form>
+      </section>
+
+      <!-- ============================================================
+           BOTTOM GRID
+           Transaction list and spending chart sit side by side on
+           desktop, stacked on mobile.
+      ============================================================ -->
+      <div class="bottom-grid">
+
+        <!-- ============================================================
+             TRANSACTION LIST
+        ============================================================ -->
+        <section class="list-section" aria-label="Transaction history">
+          <div class="list-section__header">
+            <h2 class="section-title">Transactions</h2>
+            <!-- Sort control -->
+            <div class="sort-control">
+              <label class="sort-control__label" for="sort-select">Sort by</label>
+              <select class="sort-control__select" id="sort-select" aria-label="Sort transactions">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="amount-desc">Amount ↓</option>
+                <option value="amount-asc">Amount ↑</option>
+                <option value="category">Category</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- The list itself. Items are injected here by JS. -->
+          <ul
+            class="transaction-list"
+            id="transaction-list"
+            aria-label="List of transactions"
+          >
+            <!-- Empty state shown by JS when there are no transactions -->
+          </ul>
+
+          <!-- Empty state placeholder — visible only when the list is empty -->
+          <div class="empty-state" id="empty-state" hidden>
+            <p class="empty-state__text">No transactions yet.</p>
+            <p class="empty-state__hint">Add your first one above.</p>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SPENDING CHART
+        ============================================================ -->
+        <section class="chart-section" aria-label="Spending by category">
+          <h2 class="section-title">Spending by Category</h2>
+          <div class="chart-wrapper">
+            <canvas id="spending-chart" role="img" aria-label="Pie chart of spending by category"></canvas>
+          </div>
+          <!-- Shown only when there is no data to plot -->
+          <div class="chart-empty-state" id="chart-empty-state" hidden>
+            <p class="empty-state__text">No data yet.</p>
+            <p class="empty-state__hint">Transactions will appear here.</p>
+          </div>
+        </section>
+
+      </div><!-- /bottom-grid -->
+
+    </div><!-- /app-shell -->
+
+    <!-- Application logic — loaded last so the DOM is ready -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

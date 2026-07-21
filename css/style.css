@@ -1,0 +1,933 @@
+/* =============================================================================
+   EXPENSE & BUDGET VISUALIZER — style.css
+   Architecture: CSS custom properties → base reset → layout → components
+   All values reference custom properties. To change the entire theme,
+   only the :root block needs to be modified.
+============================================================================= */
+
+
+/* =============================================================================
+   1. DESIGN TOKENS — Light Mode (default)
+   Every visual decision lives here as a named variable.
+   Nothing is hardcoded anywhere else in this file.
+============================================================================= */
+
+:root {
+  /* --- Color: Backgrounds --- */
+  --color-bg:          #F4F6F9;
+  --color-surface:     #FFFFFF;
+  --color-surface-alt: #F8F9FA;
+
+  /* --- Color: Borders --- */
+  --color-border:      #E2E8F0;
+  --color-border-focus:#2563EB;
+
+  /* --- Color: Text --- */
+  --color-text-primary:   #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-muted:     #94A3B8;
+  --color-text-on-accent: #FFFFFF;
+
+  /* --- Color: Accent (primary action) --- */
+  --color-accent:       #2563EB;
+  --color-accent-hover: #1D4ED8;
+  --color-accent-light: #EFF6FF;
+
+  /* --- Color: Danger (delete) --- */
+  --color-danger:       #DC2626;
+  --color-danger-hover: #B91C1C;
+  --color-danger-light: #FEF2F2;
+
+  /* --- Color: Warning (limit exceeded) --- */
+  --color-warning:      #D97706;
+  --color-warning-light:#FFFBEB;
+  --color-warning-border:#FDE68A;
+
+  /* --- Color: Balance display --- */
+  --color-balance:      #2563EB;
+
+  /* --- Color: Category badges --- */
+  --color-food-drinks-light:       #ECFDF5;
+  --color-food-drinks-text:        #065F46;
+
+  --color-transportation-light:    #EFF6FF;
+  --color-transportation-text:     #1E40AF;
+
+  --color-shopping-light:          #FAF5FF;
+  --color-shopping-text:           #6B21A8;
+
+  --color-entertainment-light:     #FDF2F8;
+  --color-entertainment-text:      #9D174D;
+
+  --color-hobbies-light:           #F0FDFA;
+  --color-hobbies-text:            #0F766E;
+
+  --color-bills-light:             #FFF7ED;
+  --color-bills-text:              #9A3412;
+
+  --color-health-light:            #F0FDF4;
+  --color-health-text:             #166534;
+
+  --color-education-light:         #EEF2FF;
+  --color-education-text:          #3730A3;
+
+  --color-investments-light:       #FEFCE8;
+  --color-investments-text:        #854D0E;
+
+  --color-savings-light:           #F8FAFC;
+  --color-savings-text:            #1E293B;
+
+  /* --- Typography --- */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-4xl:  2.5rem;    /* 40px */
+
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.5;
+
+  /* --- Spacing (8px base grid) --- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* --- Border radius --- */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  /* --- Shadows --- */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+
+  /* --- Transitions --- */
+  --transition-fast:   120ms ease;
+  --transition-normal: 200ms ease;
+
+  /* --- Layout --- */
+  --max-width: 920px;
+}
+
+
+/* =============================================================================
+   2. DESIGN TOKENS — Dark Mode
+   Only the values that change are redefined here.
+   The variable names stay identical — CSS swaps the values automatically.
+============================================================================= */
+
+[data-theme="dark"] {
+  --color-bg:          #0F172A;
+  --color-surface:     #1E293B;
+  --color-surface-alt: #263349;
+
+  --color-border:      #334155;
+  --color-border-focus:#60A5FA;
+
+  --color-text-primary:   #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted:     #64748B;
+
+  --color-accent:       #3B82F6;
+  --color-accent-hover: #2563EB;
+  --color-accent-light: #1E3A5F;
+
+  --color-danger:       #F87171;
+  --color-danger-hover: #EF4444;
+  --color-danger-light: #2D1515;
+
+  --color-warning:       #FCD34D;
+  --color-warning-light: #1C1500;
+  --color-warning-border:#92400E;
+
+  --color-balance:      #60A5FA;
+
+  --color-food-drinks-light:       #052E1A;
+  --color-food-drinks-text:        #6EE7B7;
+
+  --color-transportation-light:    #0F2A4A;
+  --color-transportation-text:     #93C5FD;
+
+  --color-shopping-light:          #2E1A47;
+  --color-shopping-text:           #D8B4FE;
+
+  --color-entertainment-light:     #3B0A28;
+  --color-entertainment-text:      #F9A8D4;
+
+  --color-hobbies-light:           #042F2E;
+  --color-hobbies-text:            #5EEAD4;
+
+  --color-bills-light:             #3A1500;
+  --color-bills-text:              #FDBA74;
+
+  --color-health-light:            #052E16;
+  --color-health-text:             #86EFAC;
+
+  --color-education-light:         #1E1B4B;
+  --color-education-text:          #A5B4FC;
+
+  --color-investments-light:       #1C1400;
+  --color-investments-text:        #FDE047;
+
+  --color-savings-light:           #0F172A;
+  --color-savings-text:            #94A3B8;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =============================================================================
+   3. RESET & BASE
+   Minimal reset that normalizes inconsistencies without overcorrecting.
+============================================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:      var(--font-family);
+  font-size:        var(--text-base);
+  font-weight:      var(--weight-normal);
+  line-height:      var(--leading-normal);
+  color:            var(--color-text-primary);
+  background-color: var(--color-bg);
+  min-height:       100vh;
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input,
+select {
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+}
+
+h1, h2, h3 {
+  line-height: var(--leading-tight);
+  font-weight: var(--weight-semibold);
+}
+
+
+/* =============================================================================
+   4. LAYOUT — App Shell & Container
+============================================================================= */
+
+.app-shell {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+
+/* =============================================================================
+   5. COMPONENT — Header
+============================================================================= */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-title {
+  font-size:   var(--text-xl);
+  font-weight: var(--weight-bold);
+  color:       var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:  36px;
+  height: 36px;
+  border-radius:    var(--radius-full);
+  border:           1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color:            var(--color-text-secondary);
+  font-size:        var(--text-base);
+  transition:
+    background-color var(--transition-fast),
+    border-color     var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-surface-alt);
+  border-color:     var(--color-text-muted);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+
+/* =============================================================================
+   6. COMPONENT — Section title (shared)
+============================================================================= */
+
+.section-title {
+  font-size:   var(--text-base);
+  font-weight: var(--weight-semibold);
+  color:       var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+
+/* =============================================================================
+   7. COMPONENT — Card (shared surface style)
+============================================================================= */
+
+.balance-card,
+.form-section,
+.limit-control,
+.list-section,
+.chart-section {
+  background-color: var(--color-surface);
+  border:           1px solid var(--color-border);
+  border-radius:    var(--radius-lg);
+  padding:          var(--space-6);
+  box-shadow:       var(--shadow-sm);
+  transition:
+    background-color var(--transition-normal),
+    border-color     var(--transition-normal);
+}
+
+
+/* =============================================================================
+   8. COMPONENT — Balance Card
+============================================================================= */
+
+.balance-card {
+  text-align: center;
+  padding: var(--space-8) var(--space-6);
+}
+
+.balance-card__label {
+  font-size:    var(--text-xs);
+  font-weight:  var(--weight-semibold);
+  color:        var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-2);
+}
+
+.balance-card__amount {
+  font-size:   var(--text-4xl);
+  font-weight: var(--weight-bold);
+  color:       var(--color-balance);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  transition: color var(--transition-normal);
+}
+
+/* When limit is exceeded, the amount turns to a warning color */
+.balance-card__amount--over-limit {
+  color: var(--color-warning);
+}
+
+/* Limit warning strip inside the balance card */
+.balance-card__limit-warning {
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              var(--space-2);
+  margin-top:       var(--space-4);
+  padding:          var(--space-2) var(--space-4);
+  background-color: var(--color-warning-light);
+  border:           1px solid var(--color-warning-border);
+  border-radius:    var(--radius-sm);
+  font-size:        var(--text-sm);
+  font-weight:      var(--weight-medium);
+  color:            var(--color-warning);
+}
+
+
+/* =============================================================================
+   9. COMPONENT — Spending Limit Control
+============================================================================= */
+
+.limit-control {
+  padding: var(--space-4) var(--space-6);
+}
+
+.limit-control__label {
+  display:       block;
+  font-size:     var(--text-sm);
+  font-weight:   var(--weight-medium);
+  color:         var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.limit-control__row {
+  display:   flex;
+  gap:       var(--space-2);
+  flex-wrap: wrap;
+}
+
+.limit-control__input {
+  flex:             1;
+  min-width:        120px;
+  height:           40px;
+  padding:          0 var(--space-3);
+  background-color: var(--color-surface-alt);
+  border:           1px solid var(--color-border);
+  border-radius:    var(--radius-sm);
+  color:            var(--color-text-primary);
+  font-size:        var(--text-sm);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.limit-control__input:focus {
+  outline:      none;
+  border-color: var(--color-border-focus);
+  background-color: var(--color-surface);
+}
+
+.limit-control__btn {
+  height:           40px;
+  padding:          0 var(--space-4);
+  background-color: var(--color-accent);
+  color:            var(--color-text-on-accent);
+  border-radius:    var(--radius-sm);
+  font-size:        var(--text-sm);
+  font-weight:      var(--weight-medium);
+  transition:       background-color var(--transition-fast);
+  white-space:      nowrap;
+}
+
+.limit-control__btn:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.limit-control__btn:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.limit-control__btn--clear {
+  background-color: transparent;
+  color:            var(--color-text-secondary);
+  border:           1px solid var(--color-border);
+}
+
+.limit-control__btn--clear:hover {
+  background-color: var(--color-surface-alt);
+  color:            var(--color-text-primary);
+}
+
+.limit-control__hint {
+  margin-top:  var(--space-2);
+  font-size:   var(--text-xs);
+  color:       var(--color-text-muted);
+}
+
+
+/* =============================================================================
+   10. COMPONENT — Transaction Form
+============================================================================= */
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.transaction-form {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-4);
+}
+
+/* Individual field wrapper */
+.form-field {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+}
+
+.form-field__label {
+  font-size:   var(--text-sm);
+  font-weight: var(--weight-medium);
+  color:       var(--color-text-secondary);
+}
+
+.form-field__input,
+.form-field__select {
+  width:            100%;
+  height:           44px;
+  padding:          0 var(--space-3);
+  background-color: var(--color-surface-alt);
+  border:           1px solid var(--color-border);
+  border-radius:    var(--radius-md);
+  color:            var(--color-text-primary);
+  font-size:        var(--text-base);
+  transition:
+    border-color     var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow       var(--transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-field__select {
+  /* Custom dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:   no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right:       var(--space-8);
+  cursor: pointer;
+}
+
+.form-field__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-field__input:focus,
+.form-field__select:focus {
+  outline:          none;
+  border-color:     var(--color-border-focus);
+  background-color: var(--color-surface);
+  box-shadow:       0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Error state — applied by JS when validation fails */
+.form-field__input--error,
+.form-field__select--error {
+  border-color: var(--color-danger);
+  background-color: var(--color-danger-light);
+}
+
+.form-field__input--error:focus,
+.form-field__select--error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  border-color: var(--color-danger);
+}
+
+.form-field__error {
+  font-size:  var(--text-xs);
+  font-weight: var(--weight-medium);
+  color:      var(--color-danger);
+  padding-top: var(--space-1);
+}
+
+/* Primary submit button */
+.btn-primary {
+  width:            100%;
+  height:           48px;
+  margin-top:       var(--space-2);
+  background-color: var(--color-accent);
+  color:            var(--color-text-on-accent);
+  border-radius:    var(--radius-md);
+  font-size:        var(--text-base);
+  font-weight:      var(--weight-semibold);
+  letter-spacing:   0.01em;
+  transition:
+    background-color var(--transition-fast),
+    transform        var(--transition-fast),
+    box-shadow       var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  box-shadow:       var(--shadow-md);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+
+/* =============================================================================
+   11. LAYOUT — Bottom Grid (List + Chart)
+   Mobile: single column, chart above list.
+   Desktop (≥ 768px): two equal columns, side by side.
+============================================================================= */
+
+.bottom-grid {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-5);
+}
+
+/* On mobile, chart appears above the list */
+.chart-section  { order: 1; }
+.list-section   { order: 2; }
+
+@media (min-width: 768px) {
+  .bottom-grid {
+    display:               grid;
+    grid-template-columns: 1fr 1fr;
+    align-items:           start;
+  }
+
+  /* On desktop, restore natural HTML order (list left, chart right) */
+  .list-section  { order: 1; }
+  .chart-section { order: 2; }
+}
+
+
+/* =============================================================================
+   12. COMPONENT — Transaction List
+============================================================================= */
+
+.list-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-4);
+  padding:        var(--space-5);
+}
+
+.list-section__header {
+  display:     flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:         var(--space-3);
+  flex-wrap:   wrap;
+}
+
+/* Sort control */
+.sort-control {
+  display:     flex;
+  align-items: center;
+  gap:         var(--space-2);
+}
+
+.sort-control__label {
+  font-size:  var(--text-xs);
+  font-weight: var(--weight-medium);
+  color:      var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.sort-control__select {
+  height:           32px;
+  padding:          0 var(--space-5) 0 var(--space-2);
+  background-color: var(--color-surface-alt);
+  border:           1px solid var(--color-border);
+  border-radius:    var(--radius-sm);
+  color:            var(--color-text-secondary);
+  font-size:        var(--text-xs);
+  font-weight:      var(--weight-medium);
+  cursor:           pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:   no-repeat;
+  background-position: right var(--space-2) center;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color var(--transition-fast);
+}
+
+.sort-control__select:focus {
+  outline:      none;
+  border-color: var(--color-border-focus);
+}
+
+/* The scrollable list container */
+.transaction-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-2);
+  max-height:     360px;
+  overflow-y:     auto;
+  padding-right:  var(--space-1); /* prevents content from touching scrollbar */
+
+  /* Custom scrollbar */
+  scrollbar-width:       thin;
+  scrollbar-color:       var(--color-border) transparent;
+}
+
+.transaction-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.transaction-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius:    var(--radius-full);
+}
+
+/* Individual transaction item */
+.transaction-item {
+  display:          flex;
+  align-items:      center;
+  justify-content:  space-between;
+  gap:              var(--space-3);
+  padding:          var(--space-3) var(--space-4);
+  background-color: var(--color-surface-alt);
+  border:           1px solid var(--color-border);
+  border-radius:    var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    border-color     var(--transition-fast);
+}
+
+.transaction-item:hover {
+  border-color: var(--color-text-muted);
+}
+
+/* Left side: name, amount, badge */
+.transaction-item__info {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-1);
+  min-width:      0; /* allows text truncation to work */
+}
+
+.transaction-item__name {
+  font-size:     var(--text-sm);
+  font-weight:   var(--weight-medium);
+  color:         var(--color-text-primary);
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-item__amount {
+  font-size:   var(--text-base);
+  font-weight: var(--weight-semibold);
+  color:       var(--color-accent);
+  letter-spacing: -0.02em;
+}
+
+/* Category badge */
+.category-badge {
+  display:          inline-flex;
+  align-items:      center;
+  padding:          2px var(--space-2);
+  border-radius:    var(--radius-full);
+  font-size:        var(--text-xs);
+  font-weight:      var(--weight-medium);
+  line-height:      1.6;
+  white-space:      nowrap;
+}
+
+.category-badge--food-drinks {
+  background-color: var(--color-food-drinks-light);
+  color:            var(--color-food-drinks-text);
+}
+
+.category-badge--transportation {
+  background-color: var(--color-transportation-light);
+  color:            var(--color-transportation-text);
+}
+
+.category-badge--shopping {
+  background-color: var(--color-shopping-light);
+  color:            var(--color-shopping-text);
+}
+
+.category-badge--entertainment {
+  background-color: var(--color-entertainment-light);
+  color:            var(--color-entertainment-text);
+}
+
+.category-badge--hobbies {
+  background-color: var(--color-hobbies-light);
+  color:            var(--color-hobbies-text);
+}
+
+.category-badge--bills {
+  background-color: var(--color-bills-light);
+  color:            var(--color-bills-text);
+}
+
+.category-badge--health {
+  background-color: var(--color-health-light);
+  color:            var(--color-health-text);
+}
+
+.category-badge--education {
+  background-color: var(--color-education-light);
+  color:            var(--color-education-text);
+}
+
+.category-badge--investments {
+  background-color: var(--color-investments-light);
+  color:            var(--color-investments-text);
+}
+
+.category-badge--savings {
+  background-color: var(--color-savings-light);
+  color:            var(--color-savings-text);
+}
+
+/* Delete button on each transaction item */
+.transaction-item__delete {
+  flex-shrink: 0;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  width:  32px;
+  height: 32px;
+  border-radius:    var(--radius-sm);
+  color:            var(--color-text-muted);
+  font-size:        var(--text-sm);
+  transition:
+    background-color var(--transition-fast),
+    color            var(--transition-fast);
+}
+
+.transaction-item__delete:hover {
+  background-color: var(--color-danger-light);
+  color:            var(--color-danger);
+}
+
+.transaction-item__delete:focus-visible {
+  outline:        2px solid var(--color-danger);
+  outline-offset: 2px;
+}
+
+
+/* =============================================================================
+   13. COMPONENT — Empty States
+============================================================================= */
+
+.empty-state {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            var(--space-1);
+  padding:        var(--space-8) var(--space-4);
+  text-align:     center;
+}
+
+.empty-state__text {
+  font-size:   var(--text-sm);
+  font-weight: var(--weight-medium);
+  color:       var(--color-text-secondary);
+}
+
+.empty-state__hint {
+  font-size: var(--text-xs);
+  color:     var(--color-text-muted);
+}
+
+.chart-empty-state {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            var(--space-1);
+  padding:        var(--space-10) var(--space-4);
+  text-align:     center;
+}
+
+
+/* =============================================================================
+   14. COMPONENT — Spending Chart
+============================================================================= */
+
+.chart-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--space-4);
+  padding:        var(--space-5);
+}
+
+.chart-wrapper {
+  position: relative;
+  width:    100%;
+  /* Constrain the canvas so it doesn't grow too large on desktop */
+  max-width:  280px;
+  margin:     0 auto;
+}
+
+.chart-wrapper canvas {
+  display: block;
+  width:   100% !important;
+  height:  auto !important;
+}
+
+
+/* =============================================================================
+   15. UTILITIES — Visibility helpers
+   Used by JavaScript to show/hide elements without layout shift.
+============================================================================= */
+
+[hidden] {
+  display: none !important;
+}
+
+
+/* =============================================================================
+   16. RESPONSIVE — Desktop enhancements (≥ 768px)
+   Adjustments that only apply on wider screens.
+============================================================================= */
+
+@media (min-width: 768px) {
+  .app-shell {
+    padding: var(--space-8) var(--space-6) var(--space-12);
+    gap:     var(--space-6);
+  }
+
+  .app-title {
+    font-size: var(--text-2xl);
+  }
+
+  .balance-card__amount {
+    font-size: 3.5rem;
+  }
+
+  .transaction-list {
+    max-height: 440px;
+  }
+}
